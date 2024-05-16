@@ -53,7 +53,7 @@ library(tidyverse)
 
 ## Read in the completed data
 Data <-
-  here("Data", "SurveyData_2022_06_02.csv") %>% fread() %>% data.frame()
+  here("Data", "SurveyData_Clean.csv") %>% fread() %>% data.frame()
 
 
 

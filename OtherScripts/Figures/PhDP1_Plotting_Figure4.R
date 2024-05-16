@@ -46,7 +46,7 @@ library(ggdist)
 
 
 ## Database and model-specific WTP:
-database <- data.frame(fread(here("Data", "Long_Weights_Category_2022_12_12.csv")))
+database <- data.frame(fread(here("Data", "Long_Weights_Category_Clean.csv")))
 ModelFive_WTP <- data.frame(fread(here("Output/ModelFiveB", "PhD_MXL_ModelFiveB_2023_02_18_WTP.csv")))
 ModelSeven_WTP <- data.frame(fread(here("Output/ModelSevenB", "PhD_MXL_ModelSevenB_2023_02_18_WTP.csv")))
 

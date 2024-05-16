@@ -1,12 +1,12 @@
 #### PhD Paper 1: Histogram Plot Of Experts ####
-## Author: Dr Peter King (p.m.king@kent.ac.uk)
-## Last change: 25/08/2022
-## TODO: Format nicely
+## Author: Dr Peter King (p.king1@leeds.ac.uk)
+## Last change: 16/05/2024
+## Change: formatted more nicely
 
 
-#------------------------------
+# ******************************************************************
 # Replication Information: ####
-#------------------------------
+# ******************************************************************
 
 
 # R version 4.2.0 (2022-04-22 ucrt)
@@ -27,9 +27,9 @@
 # [51] Matrix_1.4-1        randtoolbox_1.31.1  R6_2.5.1            rngWELL_0.10-7      compiler_4.2.0
 
 
-#------------------------------
+# ******************************************************************
 # Setup Environment: ####
-#------------------------------
+# ******************************************************************
 
 
 library(magrittr)
@@ -92,6 +92,15 @@ fun = function(x, mean, sd, n){
 
 
 
+
+## Specify once here for consistency
+TextSize <- 14
+TextFamily <- "sans"
+TextType <- element_text(size = TextSize,
+                         colour = "black",
+                         family = TextFamily)
+
+
 # ******************************************************************
 #### Section 3: Create Plot ####
 # ******************************************************************
@@ -99,33 +108,32 @@ fun = function(x, mean, sd, n){
 
 
 ### Q21 Histogram
-Q21Hist <-
+Figure1 <-
   ggplot(Data, aes(x = Q21Experts)) +
   geom_histogram(
     aes(y = after_stat(density)),
     color = "black",
-    fill = "white",
-    bins = 50
+    fill = "white", binwidth = 1,
   ) +
+  theme_bw() +
   stat_function(fun = fun,
                 args = with(Data, c(
                   mean = mean(Q21Experts),
                   sd = sd(Q21Experts),
-                  n
-                  = 6
+                  n = 1
                 ))) +
-  theme_bw() +
-  scale_x_continuous(
-    breaks = waiver(),
-    name = "Self-reported confidence in the ability of experts to provide reliable information. ",
-    labels = c(
-      "1: Unconfident\n (N = 16)",
-      "2\n (N = 46)",
-      "3\n (N = 251)",
-      "4\n (N = 237)",
-      "5: Confident\n (N = 120)"
-    )
+  scale_x_continuous(breaks = seq.int(from = 1, to = 5,by = 1),
+                     name = "Self-reported confidence in the ability of experts to provide reliable information. ",
+                     labels = c(
+                       "1: Unconfident\n (N = 16)",
+                       "2\n (N = 46)",
+                       "3\n (N = 251)",
+                       "4\n (N = 237)",
+                       "5: Confident\n (N = 120)"
+                     )
+
   ) +
+
   theme(
     legend.position = "bottom",
     legend.background = element_blank(),
@@ -133,8 +141,14 @@ Q21Hist <-
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.grid.major.y = element_blank(),
-    axis.text.x = element_text(color = "black"),
-    axis.text.y = element_text(color = "black")
+    panel.grid.minor.y = element_blank(),
+    strip.text = TextType,
+    text = TextType,
+    legend.text = TextType,
+    axis.text.x = TextType,
+    axis.text.y = TextType,
+    axis.title.y = TextType,
+    axis.title.x = TextType
   )
 
 # ******************************************************************
@@ -143,9 +157,9 @@ Q21Hist <-
 
 
 ggsave(
-  Q21Hist,
-  device = "jpeg",
-  filename = here("Output/Plots", "Q21Hist.jpeg"),
+  Figure1,
+  device = "tiff",
+  filename = here("Output/Plots", "Figure1_HistogramOfResponses.tiff"),
   width = 25,
   height = 15,
   units = "cm",

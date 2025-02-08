@@ -41,7 +41,7 @@ library(data.table)
 # ****************************************
 
 
-#--------- Estimates:
+# Estimates:
 ModelFive_Estimates <- here("Output/ModelFiveB",
        "PhD_MXL_ModelFiveB_2023_02_18_estimates.csv") %>%
     fread() %>%
@@ -54,10 +54,18 @@ ModelSeven_Estimates <- here("Output/ModelSevenB",
   data.frame()
 
 
-#--------- Outputs:
-ModelFive_Models <- readRDS(here("Output/ModelFiveB","PhD_MXL_ModelFiveB_2023_02_18_model.rds"))
-ModelSeven_Models <- readRDS(here("Output/ModelSevenB","PhD_MXL_ModelSevenB_2023_02_18_model.rds"))
+# Outputs:
 
+ModelFive_Models <-
+  readRDS(here(
+    "Output/ModelFiveB",
+    "PhD_MXL_ModelFiveB_2023_02_18_model.rds"
+  ))
+ModelSeven_Models <-
+  readRDS(here(
+    "Output/ModelSevenB",
+    "PhD_MXL_ModelSevenB_2023_02_18_model.rds"
+  ))
 
 # ***************************************
 # First Table: Summary Of MNLs ####
@@ -85,15 +93,48 @@ ModelOutput <- function(Estimates) {
 }
 
 
+## This function outputs some model diagnostics
+Diagnostics <- function(Model) {
+  rbind(
+    "N" = Model$nIndivs,
+    "AIC" = Model$AIC %>% round(3) %>% sprintf("%.3f", .),
+    "Adj.R2" = Model$adjRho2_0 %>% round(3) %>% sprintf("%.3f", .),
+    "LogLik" = Model$LLout %>% as.numeric() %>% round(3) %>% sprintf("%.3f", .)
+  )
+}
+
 
 # ****************************************
 # Second Table: Summary Of Mixed Logits ####
 # ****************************************
 
 
+
+## Stitch model outputs
+TopPart <- cbind(ModelOutput(ModelFive_Estimates) %>% rownames(),
+                 ModelOutput(ModelFive_Estimates)[, 2],
+                 ModelOutput(ModelSeven_Estimates)[, 2])
+
+## and diagnostic measures
+BottomPart <- cbind(
+  Diagnostics(ModelFive_Models) %>% rownames(),
+  Diagnostics(ModelFive_Models),
+  Diagnostics(ModelSeven_Models))
+
+
+## Correct column names to allow binding
+colnames(TopPart) <- c("Variable", "M1", "M2")
+colnames(BottomPart) <- c("Variable", "M1", "M2")
+
+
+## Mush together
+Completed <- rbind(TopPart, BottomPart)
+
+
+
 ## Export Categorical MXL Models:
-cbind(ModelOutput(ModelFive_Estimates),
-      ModelOutput(ModelSeven_Estimates)[,2])  %>%
+Completed %>%
+  data.frame() %>%
   fwrite(sep=",",
          here("Output/Tables","Table5_ModelComparisons.txt"),
          row.names = TRUE,

@@ -98,6 +98,7 @@ library(ggplot2)
 library(reshape2)
 library(dplyr)
 library(magrittr)
+library(data.table)
 
 
 # *****************************
@@ -109,7 +110,7 @@ library(magrittr)
 here() ## This is the preferred approach to Setwd()
 
 ## Setup Data:
-database <- here("Data","Long_Weights_Category_2023_02_18.csv") %>%
+database <- here("Data","Long_Weights_Category_Clean.csv") %>%
   fread() %>% data.frame()
 
 

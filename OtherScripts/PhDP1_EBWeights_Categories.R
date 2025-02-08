@@ -191,14 +191,29 @@ EB_Weights_Category_Summary$Pair.Balance$`5 vs. 1`$Balance[c(2, 3, 4, 7, 8)]
 )
 
 
-Comparisons_1vsOther %>%
-  mutate(across(where(is.numeric),round,digits=3)) %>%
-  write.csv(quote=FALSE)
 
-Comparisons_1vsOther %>%
-  mutate(across(where(is.numeric),round,digits=3)) %>%
+Table2 <-
+bind_cols(
+  "Variables" = EB_Weights_Category_Summary$Pair.Balance$`2 vs. 1`$Balance %>% rownames(),
+  "Unbalanced" = EB_Weights_Category_Summary$Pair.Balance$`2 vs. 1`$Balance$Diff.Un %>% round(3),
+  "Balanced" = EB_Weights_Category_Summary$Pair.Balance$`2 vs. 1`$Balance$Diff.Adj %>% round(3),
+
+  "Unbalanced" = EB_Weights_Category_Summary$Pair.Balance$`3 vs. 1`$Balance$Diff.Un %>% round(3),
+  "Balanced" = EB_Weights_Category_Summary$Pair.Balance$`3 vs. 1`$Balance$Diff.Adj %>% round(3),
+
+  "Unbalanced" = EB_Weights_Category_Summary$Pair.Balance$`4 vs. 1`$Balance$Diff.Un %>% round(3),
+  "Balanced" = EB_Weights_Category_Summary$Pair.Balance$`4 vs. 1`$Balance$Diff.Adj %>% round(3),
+
+  "Unbalanced" = EB_Weights_Category_Summary$Pair.Balance$`5 vs. 1`$Balance$Diff.Un %>% round(3),
+  "Balanced" = EB_Weights_Category_Summary$Pair.Balance$`5 vs. 1`$Balance$Diff.Adj %>% round(3)
+)
+
+
+Table2 %>% write.csv(quote=FALSE)
+
+Table2 %>%
   fwrite(sep=",",
-         here("Output/Tables","Table3_BalancingComparisons.txt"),
+         here("Output/Tables","Table2_BalancingComparisons.txt"),
          row.names = TRUE,
          quote = FALSE)
 

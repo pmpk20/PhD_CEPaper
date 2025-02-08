@@ -1,6 +1,6 @@
 #### PhD Paper 1: Histogram Plot Of Experts ####
 ## Author: Dr Peter King (p.m.king@kent.ac.uk)
-## Last change: 25/08/2022
+## Last change: 08/02/2025
 ## TODO: Format nicely
 
 
@@ -90,12 +90,17 @@ Data$Certainty_VerySure <- ifelse(Data$Q12CECertainty == 2, 1, 0)
 TextSize <- 12
 
 
+TextSetup <- element_text(size = TextSize,
+             colour = "black",
+             family = "serif")
+
+
 # *****************************
 # Plot setup: ####
 # *****************************
 
 FigureX <-
-Data %>%
+  Data %>%
   group_by(Q12CECertainty,
            Q21Experts) %>%
   summarise(n = n()) %>%
@@ -105,12 +110,24 @@ Data %>%
               values_from = n) %>%
   pivot_longer(cols = 2:4,
                names_to = "Q12CECertainty") %>%
-  ggplot(aes(y = value %>% as.numeric(),
-             x = Variable %>% as.factor(), group = Q12CECertainty %>% as.factor(), fill = Q12CECertainty %>% as.factor())) +
-  geom_bar(stat = "identity", position = "dodge", colour = "black", alpha = 0.5) +
+  ggplot(
+    aes(
+      y = value %>% as.numeric(),
+      x = Variable %>% as.factor(),
+      group = Q12CECertainty %>% as.factor(),
+      fill = Q12CECertainty %>% as.factor()
+    )
+  ) +
+  geom_bar(
+    stat = "identity",
+    position = "dodge",
+    colour = "black",
+    alpha = 0.5
+  ) +
   theme_bw() +
-  scale_y_continuous(name = "Choice certainty") +
-  scale_x_discrete(name = "Self-reported confidence in experts",
+  ## Reviewer 2 says change from "Choice Certainty" to "Frequency"
+  scale_y_continuous(name = "Frequency") +
+  scale_x_discrete(name = "Self-reported confidence in experts (/5)",
                    label = c("1/5", "2/5", "3/5", "4/5", "5/5")) +
   geom_vline(xintercept = 1.5, alpha = 0.25) +
   geom_vline(xintercept = 2.5, alpha = 0.25) +
@@ -119,32 +136,21 @@ Data %>%
   scale_fill_manual(
     name = "Certainty:",
     labels = c("Unsure", "Quite Sure", "Very Sure"),
-    values = RColorBrewer::brewer.pal(9, "Blues")[c(2, 5, 8)]) +
+    values = RColorBrewer::brewer.pal(9, "Blues")[c(2, 5, 8)]
+  ) +
   theme(
     legend.position = "bottom",
-    legend.text = element_text(size = TextSize,
-                               colour = "black",
-                               family = "serif"),
     legend.background = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor.x = element_blank(),
     panel.grid.major.y = element_blank(),
     panel.grid.minor.y = element_blank(),
-    legend.title = element_text(size = TextSize,
-                                colour = "black",
-                                family = "serif"),
-    axis.text.x = element_text(size = TextSize,
-                               colour = "black",
-                               family = "serif"), ## Change text to be clearer for reader
-    axis.text.y = element_text(size = TextSize,
-                               colour = "black",
-                               family = "serif"),
-    axis.title.y = element_text(size = TextSize,
-                                colour = "black",
-                                family = "serif"),
-    axis.title.x = element_text(size = TextSize,
-                                colour = "black",
-                                family = "serif")
+    legend.text = TextSetup,
+    legend.title = TextSetup,
+    axis.text.x = TextSetup,
+    axis.text.y = TextSetup,
+    axis.title.y = TextSetup,
+    axis.title.x = TextSetup
   )
 
 
@@ -162,6 +168,54 @@ ggsave(
   units = "cm",
   dpi = 500
 )
+
+
+# ******************************************************************
+#### Section X: Alternative plot by facet ####
+# ******************************************************************
+
+
+# Data %>%
+#   group_by(Q12CECertainty,
+#            Q21Experts) %>%
+#   summarise(n = n()) %>%
+#   mutate("Variable" = Q21Experts) %>%
+#   select(-c(Q21Experts)) %>%
+#   pivot_wider(names_from = Q12CECertainty,
+#               values_from = n) %>%
+#   pivot_longer(cols = 2:4,
+#                names_to = "Q12CECertainty") %>%
+#   ggplot(aes(y = value %>% as.numeric(),
+#              x = Variable %>% as.factor(), group = Q12CECertainty %>% as.factor(), fill = Q12CECertainty %>% as.factor())) +
+#   geom_bar(stat = "identity", colour = "black", alpha = 0.75) +
+#   facet_wrap(~Q12CECertainty %>% as.factor(),
+#              ncol = 1, scales = "free_y") +
+#   theme_bw() +
+#   scale_y_continuous(name = "Frequency") +
+#   scale_x_discrete(name = "Self-reported confidence in experts (/5)",
+#                    label = c("1/5", "2/5", "3/5", "4/5", "5/5")) +
+#   geom_vline(xintercept = 1.5, alpha = 0.25) +
+#   geom_vline(xintercept = 2.5, alpha = 0.25) +
+#   geom_vline(xintercept = 3.5, alpha = 0.25) +
+#   geom_vline(xintercept = 4.5, alpha = 0.25) +
+#   scale_fill_manual(
+#     name = "Certainty:",
+#     labels = c("Unsure", "Quite Sure", "Very Sure"),
+#     values = RColorBrewer::brewer.pal(9, "Blues")[c(2, 5, 8)]) +
+#   theme(
+#     legend.position = "bottom",
+#     legend.background = element_blank(),
+#     panel.grid.major.x = element_blank(),
+#     panel.grid.minor.x = element_blank(),
+#     panel.grid.major.y = element_blank(),
+#     panel.grid.minor.y = element_blank(),
+#     legend.text = TextSetup,
+#     legend.title = TextSetup,
+#     axis.text.x = TextSetup,
+#     axis.text.y = TextSetup,
+#     axis.title.y = TextSetup,
+#     axis.title.x = TextSetup
+#   )
 
 # End Of Script -----------------------------------------------------------
 

@@ -1,8 +1,10 @@
 #### PhDP1: Model Summaries ####
 ## Function: Compares MXL results
 ## Author: Dr Peter King (p.m.king@kent.ac.uk)
-## Last change: 18/02/2023
+## Last change: 08/02/2025
 ## Change: Just compares Model 5 and 7
+# - Fixing column names and output
+# - TODO: change model names
 
 
 
@@ -111,7 +113,7 @@ Diagnostics <- function(Model) {
 
 
 ## Stitch model outputs
-TopPart <- cbind(ModelOutput(ModelFive_Estimates) %>% rownames(),
+TopPart <- data.frame(ModelOutput(ModelFive_Estimates)[, 1],
                  ModelOutput(ModelFive_Estimates)[, 2],
                  ModelOutput(ModelSeven_Estimates)[, 2])
 
@@ -123,13 +125,13 @@ BottomPart <- cbind(
 
 
 ## Correct column names to allow binding
-colnames(TopPart) <- c("Variable", "M1", "M2")
-colnames(BottomPart) <- c("Variable", "M1", "M2")
+colnames(TopPart) <- c("Variable", "Unweighted", "Weighted")
+colnames(BottomPart) <- colnames(TopPart)
 
 
 ## Mush together
 Completed <- rbind(TopPart, BottomPart)
-
+colnames(Completed) <- c("Variable", "Unweighted", "Weighted")
 
 
 ## Export Categorical MXL Models:
@@ -137,7 +139,7 @@ Completed %>%
   data.frame() %>%
   fwrite(sep=",",
          here("Output/Tables","Table5_ModelComparisons.txt"),
-         row.names = TRUE,
+         row.names = FALSE,
          quote = FALSE)
 
 

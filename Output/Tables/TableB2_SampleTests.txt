@@ -1,0 +1,18 @@
+,Variable,Category,N,Sample....,Population....,PV
+1,Gender,Male,356,53.1,46,0.019
+2,Gender,Female,311,46.4,53,PV: 0.89
+3,AgeCategory,18 - 29,93,13.9,16.2,0.571
+4,AgeCategory,30 - 39,166,24.8,13.3,0.571
+5,AgeCategory,40 - 49,288,43,14.6,0.571
+6,AgeCategory,50 - 69,118,17.6,22.9,0.571
+7,AgeCategory,70+,2,0.3,11.7,PV: 0.966
+8,Q22Education,Non-white,339,50.6,40.4,0.001
+9,Q22Education,White,328,49,42,PV: 0.971
+10,Income,Rural,339,50.6,45,0.014
+11,Income,Urban,328,49,55,PV: 0.907
+12,Employment,No data,70,10.4,30.4,0.416
+13,Employment,NEET,76,11.3,3.7,0.416
+14,Employment,Student,29,4.3,3.5,0.416
+15,Employment,Part-time,100,14.9,10.4,PV: 0.995
+16,Employment,Self-employed,46,6.9,15.1,PV: 0.995
+17,Employment,Full-time,346,51.6,36.9,PV: 0.995

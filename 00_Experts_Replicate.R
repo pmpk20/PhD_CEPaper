@@ -199,7 +199,7 @@ here("OtherScripts/Figures", "13_Experts_FigureB3_RisksByExperts.R") %>% source(
 # ******************************************************************
 
 ## Table B1
-here("OtherScripts/EntropyBalancing", "14_Experts_TableB1_EBBalancing.R") %>% source()
+here("OtherScripts/Tables", "14_Experts_TableB1_EBBalancing.R") %>% source()
 
 ## Table B2
 here("OtherScripts/Tables", "15_Experts_TableB2_SampleTest.R") %>% source()

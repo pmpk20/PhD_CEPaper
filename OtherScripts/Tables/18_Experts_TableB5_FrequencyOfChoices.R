@@ -1,8 +1,9 @@
 #### Experts: Histogram Plot Of Experts ####
 ## Author: Dr Peter King (p.m.king@kent.ac.uk)
-## Last change: 10/02/2025
+## Last change: 13/02/2025
 ## TODO: Format nicely
 # - Added frequency of choices
+# - adding percentages
 # - TODO Finalise code for tabyl()
 
 
@@ -177,18 +178,32 @@ Data$ExpertsGroup <- ifelse(Data$Q21Experts < 3, 0,
 
 
 ## Report frequency by level of confidence
-TableB5 <-
-  Data[, c("Q9Choice",
-           "Q10Choice",
-           "Q11Choice",
-           "Q12Choice",
-           "Q21Experts")] %>%
+# TableB5 <-
+#   Data[, c("Q9Choice",
+#            "Q10Choice",
+#            "Q11Choice",
+#            "Q12Choice",
+#            "Q21Experts")] %>%
+#   tidyr::pivot_longer(cols = c(Q9Choice, Q10Choice, Q11Choice, Q12Choice)) %>%
+#   mutate(value = ifelse(value == 0, "Option A", "Option B")) %>%
+#   group_by(Q21Experts, value) %>%
+#   summarise(n = n(),
+#             .groups = 'drop') %>%
+#   pivot_wider(names_from = value, values_from = n)
+
+## This version with %
+TableB5 <- Data[, c("Q9Choice",
+         "Q10Choice",
+         "Q11Choice",
+         "Q12Choice",
+         "Q21Experts")] %>%
   tidyr::pivot_longer(cols = c(Q9Choice, Q10Choice, Q11Choice, Q12Choice)) %>%
   mutate(value = ifelse(value == 0, "Option A", "Option B")) %>%
-  group_by(Q21Experts, value) %>%
-  summarise(n = n(),
-            .groups = 'drop') %>%
-  pivot_wider(names_from = value, values_from = n)
+  tabyl(Q21Experts, value) %>%
+  adorn_percentages(denominator = "row") %>%
+  adorn_pct_formatting(affix_sign = TRUE) %>%
+  adorn_ns(position = "front")
+
 
 
 
@@ -214,24 +229,24 @@ TableB5 %>%
 # Section 4: Table B5 by choice ####
 # *****************************
 
-
-TableBX <- cbind(
-  Data %>% tabyl(Q21Experts, Q9Choice) %>%
-    adorn_percentages(denominator = "row") %>%
-    adorn_pct_formatting(affix_sign = TRUE) %>%
-    adorn_ns(position = "front"),
-  Data %>% tabyl(Q21Experts, Q10Choice) %>%
-    adorn_percentages(denominator = "row") %>%
-    adorn_pct_formatting(affix_sign = TRUE) %>%
-    adorn_ns(position = "front"),
-  Data %>% tabyl(Q21Experts, Q11Choice) %>%
-    adorn_percentages(denominator = "row") %>%
-    adorn_pct_formatting(affix_sign = TRUE) %>%
-    adorn_ns(position = "front"),
-  Data %>% tabyl(Q21Experts, Q12Choice) %>%
-    adorn_percentages(denominator = "row") %>%
-    adorn_pct_formatting(affix_sign = TRUE) %>%
-    adorn_ns(position = "front"))
+#
+# TableBX <- cbind(
+#   Data %>% tabyl(Q21Experts, Q9Choice) %>%
+#     adorn_percentages(denominator = "row") %>%
+#     adorn_pct_formatting(affix_sign = TRUE) %>%
+#     adorn_ns(position = "front"),
+#   Data %>% tabyl(Q21Experts, Q10Choice) %>%
+#     adorn_percentages(denominator = "row") %>%
+#     adorn_pct_formatting(affix_sign = TRUE) %>%
+#     adorn_ns(position = "front"),
+#   Data %>% tabyl(Q21Experts, Q11Choice) %>%
+#     adorn_percentages(denominator = "row") %>%
+#     adorn_pct_formatting(affix_sign = TRUE) %>%
+#     adorn_ns(position = "front"),
+#   Data %>% tabyl(Q21Experts, Q12Choice) %>%
+#     adorn_percentages(denominator = "row") %>%
+#     adorn_pct_formatting(affix_sign = TRUE) %>%
+#     adorn_ns(position = "front"))
 
 
 # End Of Script -----------------------------------------------------------

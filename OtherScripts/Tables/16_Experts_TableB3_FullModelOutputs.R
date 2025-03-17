@@ -144,26 +144,28 @@ library(data.table)
 
 
 # Estimates:
-ModelFive_Estimates <- here("Output/Model_Unweighted",
-                            "Experts_Unweighted_V2_estimates.csv") %>%
+Model_Unweighted_Estimates <- here("Output/Model_Unweighted",
+                                   "Experts_Unweighted_V2_estimates.csv") %>%
   fread() %>%
   data.frame()
 
 
-ModelSeven_Estimates <- here("Output/Model_Weighted",
-                             "Experts_Weighted_V2_estimates.csv") %>%
+Model_Weighted_Estimates <- here("Output/Model_Weighted",
+                                 "Experts_Weighted_V2_estimates.csv") %>%
   fread() %>%
   data.frame()
 
 
 # Outputs:
 
-ModelFive_Models <-
+Model_Unweighted_Models <-
   readRDS(here(
     "Output/Model_Unweighted",
     "Experts_Unweighted_V2_model.rds"
   ))
-ModelSeven_Models <-
+
+
+Model_Weighted_Models <-
   readRDS(here(
     "Output/Model_Weighted",
     "Experts_Weighted_V2_model.rds"
@@ -174,25 +176,35 @@ ModelSeven_Models <-
 # ***************************************
 
 
-
+## Revised version that ignores standard error and reports p values directly
 ModelOutput <- function(Estimates) {
   data.frame("Variable" =  Estimates$V1,
              "Estimate" =  paste(
-               ifelse(
-                 Estimates$Rob.p.val.0. < 0.01,
-                 paste0(round(Estimates$Estimate,  3),  "***"),
-                 ifelse(
-                   Estimates$Rob.p.val.0. < 0.05,
-                   paste0(round(Estimates$Estimate,  3),  "**"),
-                   ifelse(
-                     Estimates$Rob.p.val.0. < 0.1,
-                     paste0(round(Estimates$Estimate,  3),  "*"),
-                     round(Estimates$Estimate,  3)
-                   )
-                 )
-               ),
-               paste0("(", round(abs(Estimates$Rob.std.err.),  3), ")")))
+               Estimates$Estimate %>% sprintf("%.3f", .),
+               "(",
+               Estimates$Rob.p.val.0. %>% sprintf("%.3f", .),
+               ")"))
 }
+
+
+# ModelOutput <- function(Estimates) {
+#   data.frame("Variable" =  Estimates$V1,
+#              "Estimate" =  paste(
+#                ifelse(
+#                  Estimates$Rob.p.val.0. < 0.01,
+#                  paste0(round(Estimates$Estimate,  3),  "***"),
+#                  ifelse(
+#                    Estimates$Rob.p.val.0. < 0.05,
+#                    paste0(round(Estimates$Estimate,  3),  "**"),
+#                    ifelse(
+#                      Estimates$Rob.p.val.0. < 0.1,
+#                      paste0(round(Estimates$Estimate,  3),  "*"),
+#                      round(Estimates$Estimate,  3)
+#                    )
+#                  )
+#                ),
+#                paste0("(", round(abs(Estimates$Rob.std.err.),  3), ")")))
+# }
 
 
 ## This function outputs some model diagnostics
@@ -200,27 +212,83 @@ Diagnostics <- function(Model) {
   rbind(
     "N" = Model$nIndivs,
     "AIC" = Model$AIC %>% round(3) %>% sprintf("%.3f", .),
+    "BIC" = Model$BIC %>% round(3) %>% sprintf("%.3f", .),
     "Adj.R2" = Model$adjRho2_0 %>% round(3) %>% sprintf("%.3f", .),
     "LogLik" = Model$LLout %>% as.numeric() %>% round(3) %>% sprintf("%.3f", .)
   )
 }
 
 # ***************************************
-# Construct table ####
+# Construct top table ####
 # ***************************************
 
 
 
 ## Stitch model outputs
-TopPart <- data.frame(ModelOutput(ModelSeven_Estimates)[, 1],
-                      ModelOutput(ModelSeven_Estimates)[, 2],
-                      ModelOutput(ModelFive_Estimates)[, 2])
+TopPart <- data.frame(ModelOutput(Model_Weighted_Estimates)[, 1],
+                      ModelOutput(Model_Weighted_Estimates)[, 2],
+                      ModelOutput(Model_Unweighted_Estimates)[, 2])
+
+
+
+KeepList <- c(
+  "asc_A",
+  "asc_B",
+  "mu_Performance_10",
+  "mu_Performance_50" ,
+  "mu_Emissions_40",
+  "mu_Emissions_90" ,
+  "mu_Price",
+  "sig_Performance_10",
+  "sig_Performance_50"  ,
+  "sig_Emissions_40"  ,
+  "sig_Emissions_90",
+  "sig_Price",
+  "Experts_Performance_10_Int",
+  "Experts_Performance_50_Int",
+  "Experts_Emissions_40_Int",
+  "Experts_Emissions_90_Int",
+  "b_Age",
+  "b_BP",
+  "b_Certainty",
+  "b_Charity",
+  "b_Q13",
+  "b_Q14",
+  "b_Q15",
+  "b_Cons",
+  "b_Distance",
+  "b_Education",
+  "b_Gender",
+  "b_Income",
+  "b_Knowledge",
+  "b_Order",
+  "b_Understanding"
+)
+
+## Correct column names to allow binding
+colnames(TopPart) <- c("Variable", "Weighted", "Unweighted")
+
+
+# Create a factor with levels in the desired order
+TopPart$Order <- factor(TopPart$Variable, levels = KeepList)
+
+# Sort the dataframe by this factor
+TopPart <- TopPart[order(TopPart$Order),]
+
+# Optional: reset row names if desired
+TopPart$Order <- NULL
+
+
+
+# ***************************************
+# Diagnostic part table  ####
+# ***************************************
 
 ## and diagnostic measures
 BottomPart <- cbind(
-  Diagnostics(ModelFive_Models) %>% rownames(),
-  Diagnostics(ModelFive_Models),
-  Diagnostics(ModelSeven_Models))
+  Diagnostics(Model_Weighted_Models) %>% rownames(),
+  Diagnostics(Model_Weighted_Models),
+  Diagnostics(Model_Unweighted_Models))
 
 
 ## Correct column names to allow binding

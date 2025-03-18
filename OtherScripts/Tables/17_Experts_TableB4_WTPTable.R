@@ -204,8 +204,7 @@ TableB4 <- cbind(
 
 
 ## This is Table B4
-TableB4 %>% write.csv(quote = FALSE,
-                      row.names = FALSE)
+TableB4 %>% write.csv(quote = FALSE)
 
 
 

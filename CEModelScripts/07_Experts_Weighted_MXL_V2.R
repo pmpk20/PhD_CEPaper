@@ -346,10 +346,11 @@ Experts_Weighted_V2 = apollo_estimate(apollo_beta,
                                             apollo_inputs)
 
 ## Model output and results here alongside saving information
+## Changing to 2-sided tests
 apollo_modelOutput(Experts_Weighted_V2,
-                   modelOutput_settings = list(printPVal = TRUE))
+                   modelOutput_settings = list(printPVal = 2))
 apollo_saveOutput(Experts_Weighted_V2,
-                  saveOutput_settings = list(printPVal = TRUE))
+                  saveOutput_settings = list(printPVal = 2))
 # saveRDS(Experts_Weighted_V2, file="Experts_Weighted_V2.rds")
 
 

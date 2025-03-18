@@ -183,7 +183,7 @@ ModelOutput <- function(Estimates) {
              "Estimate" =  paste(
                Estimates$Estimate %>% sprintf("%.3f", .),
                "(",
-               Estimates$Rob.p.val.0. %>% sprintf("%.3f", .),
+               Estimates$p.2.sided. %>% sprintf("%.3f", .),
              ")"))
 }
 
@@ -266,7 +266,12 @@ KeepList <- c(
   "Experts_Performance_10_Int",
   "Experts_Performance_50_Int",
   "Experts_Emissions_40_Int",
-  "Experts_Emissions_90_Int"
+  "Experts_Emissions_90_Int",
+  "N",
+  "AIC",
+  "BIC",
+  "Adj.R2",
+  "LogLik"
 )
 
 

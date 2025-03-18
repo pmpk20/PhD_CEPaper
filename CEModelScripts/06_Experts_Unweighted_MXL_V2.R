@@ -1,8 +1,9 @@
 #### Experts: Unweighted ####
-## Function: Model Five B: Categorical experts now with more controls
+## Function: Unweighted mixed model: Categorical experts now with more controls
 ## Author: Dr Peter King (p.m.king@kent.ac.uk)
-## Last change: 11/02/2025
-## TODO: setup RENV
+## Last change: 18/03/2025
+## Change:
+# - Correcting ASC
 
 
 # *****************************
@@ -126,7 +127,7 @@ library(here)
 library(tidyr)
 library(apollo)
 library(data.table)
-library(reshape2)
+library(reshape2) ## Don't think this is needed
 library(dplyr)
 library(magrittr)
 
@@ -140,8 +141,10 @@ library(magrittr)
 here() ## This is the preferred approach to Setwd()
 
 ## Setup Data:
-database <- here("Data", "Long_Weights_Category_2023_02_18.csv") %>%
-  fread() %>% data.frame()
+database <- here("Data",
+                 "Long_Weights_Category_2023_02_18.csv") %>%
+  fread() %>%
+  data.frame()
 
 
 # *****************************
@@ -167,8 +170,8 @@ apollo_control = list(
 
 ### Vector of parameters, including any that are kept fixed in estimation
 apollo_beta = c(
-  asc_A      = 0,
-  asc_B      = 0,
+  asc_A      = 0, ##This is for the SQ
+  asc_B      = 0, ## This is for the alternative
   mu_Performance_10 = 1,
   mu_Performance_50 = 1,
   mu_Emissions_40 = 1,
@@ -203,6 +206,7 @@ apollo_beta = c(
 )
 
 ### Vector with names (in quotes) of parameters to be kept fixed at their starting value in apollo_beta, use apollo_beta_fixed = c() if none
+## Fix to zero to permit identification of ASC_SQ i.e., A
 apollo_fixed = c("asc_B")
 
 
@@ -228,6 +232,7 @@ apollo_draws = list(
 ### Create random parameters
 apollo_randCoeff = function(apollo_beta, apollo_inputs) {
   randcoeff = list()
+  ## Lognormal
   randcoeff[["b_Price"]] = -exp(mu_Price + sig_Price * draws_Price)
   randcoeff[["b_Performance_10"]] =  (mu_Performance_10 +    sig_Performance_10 *
                                         Draws_Performance_10)
@@ -261,7 +266,9 @@ apollo_probabilities = function(apollo_beta,
     Experts_Emissions_40_Int * ((Emission_B == 40) * Experts) +
     Experts_Emissions_90_Int * ((Emission_B == 90) * Experts)
 
-  asc_B1 = asc_B +
+
+  ## Previous version was ASC_B but a reviewer kindly corrected this
+  asc_A1 = asc_A +
     b_Order * Order +
     b_Gender * Q1Gender +
     b_Age      * Age +
@@ -283,10 +290,10 @@ apollo_probabilities = function(apollo_beta,
 
   ### List of utilities: these must use the same names as in mnl_settings, order is irrelevant
   V = list()
-  V[["A"]]  = asc_A
+  V[["A"]]  = asc_A1
 
 
-  V[["B"]]  = asc_B1  +  b_Price * ((Price_B) +
+  V[["B"]]  = asc_B  +  b_Price * ((Price_B) +
                                       (b_Performance_10 * (Performance_B == 10)) +
                                       (b_Performance_50 * (Performance_B == 50)) +
                                       (b_Emissions_40 * (Emission_B == 40)) +

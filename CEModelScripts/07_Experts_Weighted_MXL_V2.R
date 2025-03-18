@@ -152,11 +152,6 @@ Data <-
   here("Data", "SurveyData_Clean.csv") %>% fread() %>% data.frame()
 
 
-database$Q8DominatedTest <- Data$Q8DominatedTest %>% rep(each = 4)
-
-database <- database %>% dplyr::filter(Q8DominatedTest == 0)
-
-
 # *****************************
 # Setup Apollo: ####
 # *****************************

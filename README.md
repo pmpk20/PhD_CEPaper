@@ -3,14 +3,16 @@
 
 ## PhD_CEPaper
 Repo for replication code and data for the paper *How confident are you in the ability of experts to provide reliable information? Evidence from a choice experiment on microplastics.*  
-Manuscript Number: EDE-2024-0285 under review at *Environment and Development Economics*  
+Published here: https://doi.org/10.1017/S1355770X25100077 at *Environment and Development Economics*  
 
 - **Last change:** 
-  - 12/02/2025  
+  - 21/08/2025  
 - **Changes:**  
+  - Adding publication DOI
   - Code, data, and output for first-round revisions  
 - **Structure:**  
   - Run 0_Experts_Replicate.R
+  - This script details which scripts to run in which order to replicate the results
 
 ---
 

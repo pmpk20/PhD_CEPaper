@@ -1,5 +1,6 @@
 ----------------------------
-[![DOI](https://zenodo.org/badge/679365202.svg)](https://doi.org/10.5281/zenodo.17152767)
+[![DOI](https://zenodo.org/badge/602512860.svg)](https://doi.org/10.5281/zenodo.20645697)
+
 ## PhD_CEPaper
 Repo for replication code and data for the paper *How confident are you in the ability of experts to provide reliable information? Evidence from a choice experiment on microplastics.*  
 Published here: https://doi.org/10.1017/S1355770X25100077 at *Environment and Development Economics*  

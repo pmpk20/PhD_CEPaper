@@ -1,5 +1,6 @@
 ----------------------------
-[![DOI](https://zenodo.org/badge/602512860.svg)](https://doi.org/10.5281/zenodo.20645697)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.602512860.svg)](https://doi.org/10.5281/zenodo.20645697)
+
 
 ## PhD_CEPaper
 Repo for replication code and data for the paper *How confident are you in the ability of experts to provide reliable information? Evidence from a choice experiment on microplastics.*  
